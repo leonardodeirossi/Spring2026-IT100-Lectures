@@ -1,0 +1,856 @@
+\documentclass[
+    notheorems,
+    11pt,
+    compress,
+    aspectratio=169
+]{beamer}
+
+%\documentclass[a4paper,11pt]{article}
+%\usepackage{beamerarticle}
+
+\usepackage{soul}
+\usepackage{xcolor}
+\sethlcolor{yellow}
+\usepackage{tabto}
+
+\mode<presentation>{
+    \usetheme{Madrid}
+    \usecolortheme{orchid}
+    \usefonttheme[onlymath]{serif}
+    \setbeamertemplate{blocks}[rounded][shadow=true]
+    \setbeamertemplate{navigation symbols}{}
+    \setbeamertemplate{enumerate items}[square]
+}
+
+\only<article>{
+    \usepackage[margin=1in]{geometry}
+    \setlength{\baselineskip}{15pt}
+}
+
+\only<presentation>{
+    \setlength{\baselineskip}{15pt}
+}
+
+\usepackage{config}
+
+\graphicspath{{./figures/}}
+\bibliography{bibliography.bib}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
+
+\tikzstyle{io} = [trapezium, trapezium left angle=70, text width=3cm, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+
+\tikzstyle{process} = [rectangle, minimum width=3cm, text width=4cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+
+\tikzstyle{arrow} = [thick, ->, >=stealth]
+
+% -----
+
+\title[L'istruzione di selezione e le condizioni logiche]{Dal problema al programma: le basi della programmazione}
+\subtitle{L'istruzione di selezione e le condizioni logiche}
+\author{prof. Leonardo Essam Dei Rossi}
+\institute[]{ITT "M. Buonarroti" - Trento (TN)}
+\date[A.S. 2025/2026]{Anno scolastico 2025/2026}
+
+% -----
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\only<presentation>{
+    \begin{frame}{Indice}
+        \tableofcontents
+    \end{frame}
+}
+
+\only<article>{
+    \maketitle
+}
+
+% -----
+
+\section{L'istruzione di selezione doppia}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (1)}
+    }
+
+    Nella descrizione di un \structure{algoritmo} si può verificare che le operazioni da eseguire siano diverse a seconda dei dati inseriti.
+
+    \pause
+    \vspace{\baselineskip}
+
+    \begin{block}{Esempio}
+        Ad esempio, se dobbiamo andare in vacanza, dobbiamo verificare di non avere “debiti scolastici” a settembre, e quindi si prospettano due soluzioni alternative:
+
+        \begin{itemize}
+            \item \alert{Se} abbiamo tutte sufficienze, \alert{allora} andiamo in vacanza;
+            \item \alert{Altrimenti} dobbiamo studiare tutta l’estate.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (2)}
+    }
+
+    Nel diagramma a blocchi questa situazione è illustrata ricorrendo a un elemento grafico specifico, detto \structure{blocco di decisione} o \structure{blocco condizionale}:
+
+    \pause
+
+    \begin{figure}[htbp]
+        \centering
+
+        \begin{tikzpicture}[scale=0.85, transform shape]
+            \node (co1) [decision] {Condizione};
+
+            \pause
+
+            \node (pr1) [process, below left of=co1, yshift=-1.5cm, xshift=-2cm] {Elaborazione 1};
+            \draw [arrow] (co1) -| node[anchor=east] {Yes (VERO)} (pr1);
+
+            \pause
+            
+            \node (pr2) [process, below right of=co1, yshift=-1.5cm, xshift=2cm] {Elaborazione 2};
+            \draw [arrow] (co1) -| node[anchor=west] {No (FALSO)} (pr2);
+        \end{tikzpicture}
+        
+        \caption{Blocco di decisione (condizionale) ramificato}
+        \label{fig:11}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (3)}
+    }
+
+    Di seguito alcuni esempi di istruzioni di confronto che possiamo scrivere nei blocchi condizionali:
+
+    \vspace{\baselineskip}
+
+    \begin{columns}
+        \column{0.5\textwidth}
+            \begin{itemize}
+                \item Ho abbastanza soldi comprare la moto?
+                \item Il numero 50 è maggiore di 0?
+                \item Mario è un alunno di questa classe?
+            \end{itemize}
+
+        \column{0.5\textwidth}
+            \begin{itemize}
+                \item Il serbatoio è pieno?
+                \item Giochi a calcio?
+                \item 27 è un numero pari?
+            \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (4)}
+    }
+
+    \begin{block}{}
+        A queste domande si può solo rispondere \alert{SÌ} oppure \alert{NO}, esistono cioè soltanto \structure{due alternative}: si tratta dunque di “istruzioni di confronto” che prendono il nome di \alert{condizioni logiche} dalle quali, a seconda del valore della risposta, è sempre necessario intraprendere \alert{percorsi alternativi}, cioè in base alla risposta è necessario eseguire operazioni diverse.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (5)}
+    }
+    
+    Li rappresentiamo graficamente nei diagrammi a blocchi con uno schema come il seguente:
+
+    \begin{columns}
+        \column{0.5\textwidth}
+            \begin{figure}[htbp]
+                \centering
+        
+                \begin{tikzpicture}[scale=0.75, transform shape]
+                    \node (co1) [decision, text width=2cm] {Sei stato promosso?};
+        
+                    \node (pr1) [process, below left of=co1, yshift=-1.5cm, xshift=-2cm] {Vai alla classe successiva};
+                    \node (pr2) [process, below right of=co1, yshift=-1.5cm, xshift=2cm] {Ripeti la stessa classe};
+        
+                    \draw [arrow] (co1) -| node[anchor=east] {SÌ} (pr1);
+                    \draw [arrow] (co1) -| node[anchor=west] {NO} (pr2);
+                \end{tikzpicture}
+            \end{figure}
+
+        \pause
+
+        \column{0.5\textwidth}
+            \begin{figure}[htbp]
+                \centering
+        
+                \begin{tikzpicture}[scale=0.75, transform shape]
+                    \node (co1) [decision, text width=2cm] {Hai 18 anni?};
+        
+                    \node (pr1) [process, below left of=co1, yshift=-1.5cm, xshift=-2cm] {Puoi prendere la patente};
+                    \node (pr2) [process, below right of=co1, yshift=-1.5cm, xshift=2cm] {Non puoi guidare};
+        
+                    \draw [arrow] (co1) -| node[anchor=east] {SÌ} (pr1);
+                    \draw [arrow] (co1) -| node[anchor=west] {NO} (pr2);
+                \end{tikzpicture}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (6)}
+    }
+
+    \begin{columns}
+        \column{0.45\textwidth}
+            \begin{block}{}
+                Possiamo osservare che, a seconda della risposta data alla domanda (cioè al \alert{test}), le strade “si dividono”, vengono eseguite operazioni diverse nei due “rami” ma, successivamente, si ricongiungono.
+            \end{block}
+
+            \pause
+
+            \only<presentation>{
+                \hl{La presenza di istruzioni in entrambi i rami del diagramma fa sì che in questo caso si parli di \textbf{selezione doppia}.}
+
+                \pause
+            }
+
+            \only<article>{
+                La presenza di istruzioni in entrambi i rami del diagramma fa sì che in questo caso si parli di \textbf{selezione doppia}.
+            }
+
+            \only<presentation>{
+                \vspace{\baselineskip}
+                
+                Scriviamo il diagramma a blocchi per l’algoritmo “semplificato” che descrive la procedura per l’acquisto di una moto.
+            }
+
+        \column{0.45\textwidth}
+            \only<presentation>{
+                \pause
+                \begin{figure}
+                    \centering
+    
+                    \begin{tikzpicture}[scale=0.75, transform shape]
+                        \node (start) [startstop] {Inizio};
+    
+                        \node (io1) [io, below of=start, yshift=-0.5cm] {Leggi: costo della moto};
+                        \draw [arrow] (start) -- (io1);
+    
+                        \node (io2) [io, below of=io1, yshift=-0.5cm] {Leggi: soldi a disposizione};
+                        \draw [arrow] (io1) -- (io2);
+                    \end{tikzpicture}
+                \end{figure}
+    
+                \begin{center}
+                    \textit{(continua)}
+                \end{center}
+            }
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (7)}
+    }
+
+    \begin{columns}
+        \column{0.45\textwidth}
+            \only<presentation>{
+                \begin{block}{}
+                    Possiamo osservare che, a seconda della risposta data alla domanda (cioè al \alert{test}), le strade “si dividono”, vengono eseguite operazioni diverse nei due “rami” ma, successivamente, si ricongiungono.
+                \end{block}
+    
+                \hl{La presenza di istruzioni in entrambi i rami del diagramma fa sì che in questo caso si parli di \textbf{selezione doppia}.}
+            }
+
+            \vspace{\baselineskip}
+
+            \only<presentation>{
+                Scriviamo il diagramma a blocchi per l’algoritmo “semplificato” che descrive la procedura per l’acquisto di una moto.
+            }
+
+            \only<article>{
+                Scriviamo il diagramma a blocchi per l’algoritmo “semplificato” che descrive la procedura per l’acquisto di una moto:
+            }
+
+        \column{0.45\textwidth}
+            \only<presentation>{
+                \begin{figure}
+                    \centering
+    
+                    \begin{tikzpicture}[scale=0.75, transform shape]
+                        \node (co1) [decision, text width=2cm] {I soldi che hai sono sufficienti?};
+            
+                        \node (pr1) [process, below left of=co1, yshift=-1.5cm, xshift=-2cm] {Stampa: "puoi comprare la moto"};
+                        \node (pr2) [process, below right of=co1, yshift=-1.5cm, xshift=2cm] {Stampa: "devi guadagnare altri soldi!"};
+            
+                        \draw [arrow] (co1) -| node[anchor=east] {SÌ} (pr1);
+                        \draw [arrow] (co1) -| node[anchor=west] {NO} (pr2);
+    
+                        \node (stop) [startstop, below of=pr1, yshift=-1cm, xshift=2.7cm] {Fine};
+    
+                        \draw [arrow] (pr1) -| node[anchor=north] {} (stop);
+                        \draw [arrow] (pr2) -| node[anchor=north] {} (stop);
+                    \end{tikzpicture}
+                \end{figure}
+            }
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{L'istruzione di selezione doppia (8)}
+    }
+
+    \begin{figure}[htbp]
+        \centering
+
+        \begin{tikzpicture}[scale=0.75, transform shape]
+            \node (start) [startstop] {Inizio};
+
+            \node (io1) [io, below of=start, yshift=-0.5cm] {Leggi: costo della moto};
+            \draw [arrow] (start) -- (io1);
+
+            \node (io2) [io, below of=io1, yshift=-0.5cm] {Leggi: soldi a disposizione};
+            \draw [arrow] (io1) -- (io2);
+
+
+            \node (co1) [decision, right of=start, text width=2cm, xshift=8cm] {I soldi che hai sono sufficienti?};
+        
+            \node (pr1) [process, below left of=co1, yshift=-1.5cm, xshift=-2cm] {Stampa: "puoi comprare la moto"};
+            \node (pr2) [process, below right of=co1, yshift=-1.5cm, xshift=2cm] {Stampa: "devi guadagnare altri soldi!"};
+
+            \draw [arrow] (co1) -| node[anchor=east] {SÌ} (pr1);
+            \draw [arrow] (co1) -| node[anchor=west] {NO} (pr2);
+
+            \node (stop) [startstop, below of=pr1, yshift=-1cm, xshift=2.7cm] {Fine};
+
+            \draw [arrow] (pr1) -| node[anchor=north] {} (stop);
+            \draw [arrow] (pr2) -| node[anchor=north] {} (stop);
+
+            \draw [arrow] (io2.south) |- ++(3,-0.5) |- ([yshift=0.6cm]co1.north) -- (co1.north);
+        \end{tikzpicture}
+
+        \caption{Diagramma di flusso completo}
+        \label{fig:12}
+    \end{figure}
+\end{frame}
+
+% -----
+
+\only<article>{
+    \newpage
+}
+
+\section{Il linguaggio di progetto}
+
+\begin{frame}[fragile]
+    \only<presentation>{
+        \frametitle{Il linguaggio di progetto (1)}
+    }
+
+    Iniziamo a definire un "nostro" \structure{linguaggio di progetto}, ovvero un insieme di convenzioni da rispettare quando si scrive un algoritmo in pseudocodifica.
+
+    \vspace{\baselineskip}
+
+    \only<article>{
+        \noindent
+        Definiamo la struttura base di un programma:
+        
+        \vspace{\baselineskip}
+
+        \noindent
+        \fbox{\parbox{\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            ...
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+
+    \only<presentation>{
+        Definiamo la struttura base di un programma:
+
+        \vspace{\baselineskip}
+    
+        \fbox{\parbox{0.95\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            ...
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+\end{frame}
+
+\begin{frame}[fragile]
+    \only<presentation>{
+        \frametitle{Il linguaggio di progetto (2)}
+    }
+
+    \only<presentation>{
+        Definiamo ora le istruzioni di input e output:
+
+        \vspace{\baselineskip}
+    
+        \fbox{\parbox{0.95\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (distanza\_km):}} "Inserisci la distanza in km"
+            \\
+            ...
+            \\
+            \structure{\texttt{Stampa (distanza\_km):}} "La distanza in km è: [1]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+
+    \only<article>{
+        \vspace{\baselineskip}
+        \noindent
+        Definiamo ora le istruzioni di input e output:
+
+        \vspace{\baselineskip}
+
+        \noindent
+        \fbox{\parbox{\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (distanza\_km):}} "Inserisci la distanza in km"
+            \\
+            ...
+            \\
+            \structure{\texttt{Stampa (distanza\_km):}} "La distanza in km è: [1]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Il linguaggio di progetto (3)}
+    }
+
+    \only<article>{
+        \vspace{\baselineskip}
+        \noindent
+        E l'istruzione di elaborazione:
+
+        \vspace{\baselineskip}
+
+        \noindent
+        \fbox{\parbox{\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (distanza\_km):}} "Inserisci la distanza in km"
+            \\
+            \structure{\texttt{Calcola:}} (\texttt{distanza\_m = distanza\_km * 1000})
+            \\
+            \structure{\texttt{Stampa (distanza\_km, distanza\_m):}} "La distanza in km è [1], mentre in metri è [2]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+
+    \only<presentation>{
+        E l'istruzione di elaborazione:
+    
+        \vspace{\baselineskip}
+    
+        \fbox{\parbox{0.95\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (distanza\_km):}} "Inserisci la distanza in km"
+            \\
+            \structure{\texttt{Calcola:}} (\texttt{distanza\_m = distanza\_km * 1000})
+            \\
+            \structure{\texttt{Stampa (distanza\_km, distanza\_m):}} "La distanza in km è [1], mentre in metri è [2]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Il linguaggio di progetto (5)}
+    }
+
+    \only<article>{
+        \vspace{\baselineskip}
+        \noindent
+        Per finire, l'istruzione di decisione:
+
+        \vspace{\baselineskip}
+
+        \noindent
+        \fbox{\parbox{\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (distanza\_km):}} "Inserisci la distanza in km"
+            \\
+            \structure{\texttt{Calcola:}} (\texttt{distanza\_m = distanza\_km * 1000})
+            \\
+            \\
+            \structure{\texttt{Se (distanza\_m > 1000), allora:}}
+            \\
+            \structure{-~~~~\texttt{Stampa ():}} "La distanza è più di 1000 metri!"
+            \\
+            \structure{\texttt{Altrimenti:}}
+            \\
+            \structure{-~~~~\texttt{Stampa ():}} "La distanza è meno di 1000 metri!"
+            \\
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+
+    \only<presentation>{
+        Per finire, l'istruzione di decisione:
+    
+        \vspace{\baselineskip}
+    
+        \fbox{\parbox{0.95\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (distanza\_km):}} "Inserisci la distanza in km"
+            \\
+            \structure{\texttt{Calcola:}} (\texttt{distanza\_m = distanza\_km * 1000})
+            \\
+            \\
+            \structure{\texttt{Se (distanza\_m > 1000), allora:}}
+            \\
+            \structure{-~~~~\texttt{Stampa ():}} "La distanza è più di 1000 metri!"
+            \\
+            \structure{\texttt{Altrimenti:}}
+            \\
+            \structure{-~~~~\texttt{Stampa ():}} "La distanza è meno di 1000 metri!"
+            \\
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+\end{frame}
+
+% -----
+
+\only<presentation>{
+    \subsection{Esercizio \#1}
+}
+
+\only<article>{
+    \subsection{Esercizio \#1 (Tratto da: \cite[p. 350]{ISBN_8820378434})}
+}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Esercizio \#1}
+
+        \textbf{Si consideri la \structure{Figura \ref{fig:12}}.}
+        \\
+        Scrivere la pseudocodifica corrispondente in linguaggio formale.
+    }
+    
+
+    \only<presentation>{
+        \vfill
+    }
+
+    \only<article>{
+        Si consideri la \structure{Figura \ref{fig:12}}.
+        \\
+        Scrivere la pseudocodifica corrispondente in linguaggio formale.
+    
+        \vspace{\baselineskip}
+    }
+\end{frame}
+
+% ----
+
+\only<presentation>{
+    \subsection{Esercizio \#2}
+}
+
+\only<article>{
+    \subsection{Esercizio \#2 (Tratto da: \cite[p. 355]{ISBN_8820378434})}
+}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Esercizio \#2}
+    }
+
+    Si scriva il diagramma di flusso e la relativa pseudocodifica in linguaggio formale del seguente esercizio: "\textit{leggi due numeri e visualizza sullo schermo il maggiore di essi}".
+
+    \only<presentation>{
+        \vfill
+    }
+
+    \only<article>{
+        \vspace{\baselineskip}
+    }
+\end{frame}
+
+% -----
+
+\only<article>{
+    \newpage
+}
+
+\section{La selezione semplice}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{La selezione semplice (1)}
+    }
+
+    È possibile che le operazioni da eseguire siano presenti in un solo ramo, quando ad esempio si devono effettuare operazione solo in un caso dell’esito del test.
+
+    \vspace{\baselineskip}
+
+    In queste situazioni si parla di \structure{selezione semplice}.
+\end{frame}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{La selezione semplice (2)}
+    }
+
+    \only<article>{
+        \vspace{\baselineskip}
+    }
+
+    \begin{block}{Esempio}
+        Scriviamo un programma che trasforma i numeri negativi in positivi: nel caso che il numero inserito sia già positivo non dobbiamo effettuare nessuna operazione mentre se è negativo lo moltiplichiamo per –1, in modo da cambiarne il segno.
+    \end{block}
+
+    \vspace{\baselineskip}
+
+    \pause
+
+    \only<article>{
+        \noindent
+        Una possibile soluzione è la seguente:
+
+        \vspace{\baselineskip}
+
+        \noindent
+        \fbox{\parbox{\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (numero):}} "Inserisci un numero"
+            \\
+            \structure{\texttt{Se (numero < 0), allora:}}
+            \\
+            \structure{-~~~~\texttt{Calcola:}} (\texttt{numero = numero * (-1)})
+            \\
+            \structure{\texttt{Stampa (numero):}} "Il numero è [1]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+
+    \only<presentation>{
+        Una possibile soluzione è la seguente:
+
+        % \vspace{\baselineskip}
+    
+        \fbox{\parbox{0.95\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (numero):}} "Inserisci un numero"
+            \\
+            \structure{\texttt{Se (numero < 0), allora:}}
+            \\
+            \structure{-~~~~\texttt{Calcola:}} (\texttt{numero = numero * (-1)})
+            \\
+            \structure{\texttt{Stampa (numero):}} "Il numero è [1]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+\end{frame}
+
+% -----
+
+\subsection{Esercizio \#3}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Esercizio \#3}
+    }
+
+    \textbf{Si consideri la pseudocodifica formale presentata.}
+    \\
+    Scrivere il corrispettivo diagramma di flusso.
+\end{frame}
+
+% -----
+
+\subsection{Istruzione di selezione semplice vs. doppia}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Istruzione di selezione semplice vs. doppia}
+    
+        \begin{block}{Nota bene}
+            L’istruzione di \structure{selezione semplice} può quindi essere considerata un caso particolare di \structure{selezione doppia} dove viene a mancare il ramo \alert{altrimenti}; non è invece possibile avere un’istruzione semplice senza il ramo \alert{allora}, con cioè il solo ramo \alert{altrimenti}.
+        \end{block}
+    }
+
+    \only<article>{
+        \textbf{Nota bene.} L’istruzione di \structure{selezione semplice} può quindi essere considerata un caso particolare di \structure{selezione doppia} dove viene a mancare il ramo \alert{altrimenti}; non è invece possibile avere un’istruzione semplice senza il ramo \alert{allora}, con cioè il solo ramo \alert{altrimenti}.
+    }
+\end{frame}
+
+% -----
+
+\section{Esercizi}
+
+\subsection{Esercizio \#4}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Esercizio \#4}
+    }
+
+    Si scrivano il diagramma di flusso e la pseudocodifica in linguaggio formale di un programma che, dati in input tre numeri, stabilisca se tali numeri siano o meno una terna pitagorica.
+
+    \vspace{\baselineskip}
+
+    \only<presentation>{
+        \begin{block}{Definizione: Terna pitagorica}
+            Tre numeri formano una terna pitagorica se il quadrato del primo è uguale alla somma dei quadrati del secondo e del terzo.
+    
+            \vspace{\baselineskip}
+    
+            \textbf{Esempio:} \((3, 4, 5) \to (9, 16, 25) \Rightarrow 9 + 16 = 25\)
+        \end{block}
+    }
+
+    \only<article>{
+        \textbf{Definizione.} Tre numeri formano una terna pitagorica se il quadrato del primo è uguale alla somma dei quadrati del secondo e del terzo.
+
+        \vspace{\baselineskip}
+
+        \textbf{Esempio.} \((3, 4, 5) \to (9, 16, 25) \Rightarrow 9 + 16 = 25\)
+    }
+
+    \vfill
+
+    \only<presentation>{
+        Tratto da: \structure{\cite[p. 355]{ISBN_8820378434}}
+    }
+\end{frame}
+
+% -----
+
+\only<article>{
+    \newpage
+}
+
+\only<presentation>{
+    \subsection{Esercizio \#5}
+}
+
+\only<article>{
+    \subsection{Esercizio \#5 (Tratto da: \cite[p. 358]{ISBN_8820378434})}
+}
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Esercizio \#5}
+    }
+
+    Si consideri la seguente pseudocodifica formale:
+
+    \vspace{\baselineskip}
+
+    \only<presentation>{
+        \fbox{\parbox{0.95\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (numero1, numero2):}} "Inserisci due numeri"
+            \\
+            \structure{\texttt{Se (numero1 < numero2), allora:}}
+            \\
+            \structure{-~~~~\texttt{Stampa (numero2):}} "[1]"
+            \\
+            \structure{\texttt{Leggi (numero3):}} "Inserisci un numero"
+            \\
+            \structure{\texttt{Se (numero2 < numero3), allora:}}
+            \\
+            \structure{-~~~~\texttt{Stampa (numero2):}} "[1]"
+            \\
+            \structure{\texttt{Altrimenti:}}
+            \\
+            \structure{-~~~~\texttt{Stampa (numero3):}} "[1]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+
+    \only<article>{
+        \noindent
+        \fbox{\parbox{\textwidth}{
+            \structure{\texttt{Inizio}}
+            \\
+            \structure{\texttt{Leggi (numero1, numero2):}} "Inserisci due numeri"
+            \\
+            \structure{\texttt{Se (numero1 < numero2), allora:}}
+            \\
+            \structure{-~~~~\texttt{Stampa (numero2):}} "[1]"
+            \\
+            \structure{\texttt{Leggi (numero3):}} "Inserisci un numero"
+            \\
+            \structure{\texttt{Se (numero2 < numero3), allora:}}
+            \\
+            \structure{-~~~~\texttt{Stampa (numero2):}} "[1]"
+            \\
+            \structure{\texttt{Altrimenti:}}
+            \\
+            \structure{-~~~~\texttt{Stampa (numero3):}} "[1]"
+            \\
+            \structure{\texttt{Fine}}
+        }}
+    }
+
+    \vspace{\baselineskip}
+
+    Cosa viene visualizzato inserendo i valori \((5, 2, 7)\)?
+
+    \only<presentation>{
+        \vfill
+    }
+
+    \only<article>{
+        \vspace{\baselineskip}
+    }
+\end{frame}
+
+% -----
+
+\begin{frame}
+    \only<presentation>{
+        \frametitle{Riferimenti e approfondimenti}    
+    }
+    
+    \printbibliography
+\end{frame}
+
+% -----
+
+\end{document}

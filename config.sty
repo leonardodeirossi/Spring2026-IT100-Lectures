@@ -18,9 +18,11 @@
 \usepackage{bibentry}
 \usepackage[backend=biber,style=ieee, citestyle=numeric]{biblatex}
 \usepackage{csquotes}
+% \usepackage{enumitem}
 
 \usepackage{tikz}
 \usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric, arrows}
 
 \newcolumntype{P}[1]{>{\centering \arraybackslash}p{#1}}
 \newcolumntype{L}{X}
@@ -28,18 +30,20 @@
 \newcolumntype{R}{>{\raggedleft \arraybackslash}X}
 
 \setbeamertemplate{theorems}[numbered]
-\newtheorem{theorem}{Theorem}
-\numberwithin{theorem}{section}
-\newtheorem{definition}{Definition}
-\numberwithin{definition}{section}
-\newtheorem{lemma}{Lemma}
-\numberwithin{lemma}{section}
-\newtheorem{proposition}{Proposition}
-\numberwithin{proposition}{section}
-\newtheorem{corollary}{Corollary}
-\numberwithin{corollary}{section}
-\theoremstyle{example}
-\newtheorem{example}{Example}
+\only<presentation>{
+    \newtheorem{theorem}{Theorem}
+    \numberwithin{theorem}{section}
+    \newtheorem{definition}{Definizione}
+    \numberwithin{definition}{section}
+    \newtheorem{lemma}{Lemma}
+    \numberwithin{lemma}{section}
+    \newtheorem{proposition}{Proposition}
+    \numberwithin{proposition}{section}
+    \newtheorem{corollary}{Corollary}
+    \numberwithin{corollary}{section}
+    \theoremstyle{example}
+    \newtheorem{example}{Example}
+}
 
 \renewenvironment{proof}[1][Proof]{\textit{#1}:~}{\qed\par}
 
